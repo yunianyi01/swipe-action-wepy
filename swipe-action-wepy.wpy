@@ -1,0 +1,143 @@
+<style lang="less">
+  .swipe-item-wrapper{
+    overflow: hidden;
+    position: relative;
+    border-bottom: 0.01rem solid #d8d8d8;
+    .swipe-item-wrapper-action {
+      position: absolute;
+      z-index: 2;
+      background: transparent;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      display: none;
+    }
+    .swipe-item-wrapper-action-popup {
+      display: block;
+    }
+    .swipe-actions{
+      width: 80rpx;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      visibility: hidden;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .actions-right {
+      right: 0;
+    }
+    .actions-visibility {
+      visibility: visible;
+    }
+    .swiper-item-wrapper-content {
+      width: 100%;
+    }
+    .swiper-item-wrapper-content-slide {
+      transform: translate(-80rpx);
+    }
+    .swipe-btn{
+      flex: 1;
+      height: 100%;
+      //height: 90rpx;
+      //line-height: 90rpx;
+      text-align: center;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.del{
+        background-color: rgb(244, 51, 60);
+      }
+      &.edit{
+        background-color: rgb(16, 142, 233);
+      }
+    }
+  }
+</style>
+<template>
+  <view class="swipe-item-wrapper"
+        id="{{swipeData[filed]}}"
+        @touchstart="tStart"
+        @touchmove="tMove"
+        @touchend="tEnd">
+    <view class="swipe-item-wrapper-action {{swipeData[filed] == slideIndex ? 'swipe-item-wrapper-action-popup' : ''}}"></view>
+    <view class="swipe-actions actions-right {{swipeData[filed] == slideIndex ? 'actions-visibility' : ''}}">
+      <view class="swipe-btn del" @tap.stop="handleDelete('{{ swipeData }}')">删除</view>
+    </view>
+    <view class="swiper-item-wrapper-content {{swipeData[filed] == slideIndex ? 'swiper-item-wrapper-content-slide' : ''}}">
+      <slot></slot>
+    </view>
+
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class WepyDelete extends wepy.component {
+    props = {
+      swipeData: {
+        type: Object,
+        default: {},
+        twoWay: true
+      },
+      filed: {
+        type: String,
+        default: 'id',
+        twoWay: true
+      }
+    }
+    data = {
+      startX: null,
+      moveX: null,
+      swiperData: {},
+      slideIndex: null
+    }
+    onLoad () {}
+    watch = {
+      swipeData(newValue, oldValue) {}
+    }
+    methods = {
+      tStart (e) {
+        if (e.touches.length === 1) {
+          this.startX = e.touches[0].clientX
+          this.moveX = e.touches[0].clientX
+        }
+      },
+      tMove (e) {
+        if (e.touches.length === 1) {
+          // 手指起始点位置与移动期间的差值
+          var distenceX = this.moveX - e.touches[0].clientX
+          this.moveX = e.touches[0].clientX
+            if ((distenceX) > 1) {
+              this.slideIndex = e.currentTarget.id
+            } else if ((distenceX) < 0) {
+              this.slideIndex = null
+            } else {
+              this.slideIndex = null
+            }
+          this.$apply()
+        }
+      },
+      tEnd (e) {
+
+      },
+      handleDelete(item) {
+        item = JSON.parse(JSON.stringify(item))
+        this.$emit('deleteItem', item)
+      },
+      // 删除事件结束后执行的函数
+      slideHideBtn(label) {
+        this.slideIndex = null
+      }
+    }
+  }
+</script>

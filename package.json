@@ -1,0 +1,21 @@
+{
+  "name": "swipe-action-wepy",
+  "version": "1.0.0",
+  "description": "微信小程序框架wepy，滑动操作插件",
+  "main": "swipe-action-wepy.wpy",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yunianyi01/swipe-action-wepy.git"
+  },
+  "author": "yunianyi01 <1803580869@qq.com>",
+  "keywords": [
+    "wepy",
+    "sweipe-action-wepy"
+  ],
+  "bugs": {
+    "url": "https://github.com/yunianyi01/swipe-action-wepy/issues"
+  },
+  "homepage": "https://github.com/yunianyi01/swipe-action-wepy",
+  "license": "MIT"
+}
